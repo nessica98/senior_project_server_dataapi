@@ -3,6 +3,14 @@ const db = require('./models')
 const LogbookData = db.LogbookData
 const LogbookListData = db.LogbookListData
 
+router.get('/all', (req,res)=>{
+    LogbookData.findAll( {include: [{ model: LogbookListData, as: 'lists' }] }).then((data) => {
+        data = data.map(val => val.dataValues)
+        console.log(data)
+        res.send(data)
+    })
+})
+
 // gateway only!!
 router.get('/:nodename', (req,res)=>{
     const {nodename} = req.params

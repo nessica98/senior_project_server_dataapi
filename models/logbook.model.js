@@ -6,6 +6,9 @@ module.exports = (seq,Seq) => {
         },
         nodename: {
             type: Seq.STRING
+        },
+        gatewayId:{
+            type: Seq.STRING
         }
     })
     const LogbookListData = seq.define('logbooklist',{

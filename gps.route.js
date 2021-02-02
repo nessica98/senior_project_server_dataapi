@@ -9,9 +9,10 @@ const NodeData = db.nodedata
 
 
 router.get('/allnode', (req,res)=>{
-    NodeData.findAll().then((result)=>{
+    NodeData.findAll({order: sequelize.literal('nodeupdate DESC')}).then((result)=>{
         console.log(result)
         res.send(result)
+
     }).catch((reason)=>{
         
     })

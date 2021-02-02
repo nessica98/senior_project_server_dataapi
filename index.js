@@ -7,11 +7,18 @@ const app_mode = process.env.APP_MODE
 const app = express();
 
 
-var corsOptions = {
-  origin: "http://localhost:4200"
-};
+var allowlist = ['http://localhost:4200', 'http://example2.com']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -19,39 +26,23 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to boatapp application." });
-});
+const ApiRoute = require('./api.route')
+app.use('/api', ApiRoute)
 
 const db = require('./models')
-const gpsRoute = require('./gps.route')
-
-const gatewayRoute = require('./gateway.route')
-const LogbookRoute = require('./logbook.route')
-const bulkTxRoute = require('./bulk.route')
-const authRoute = require('./auth.route')
-
 const sequelize = db.sequelize
-const NodeGPS = db.nodegpsdata
 sequelize.sync({ force:false }).then((val) => {
   console.log('DB start run')
 })
-app.use('/gps', gpsRoute)
-app.use('/logbook', LogbookRoute)
-if (app_mode === 'Server') {
-  console.log('SERVER')
-  app.use('/gateway', gatewayRoute)
-  app.use('/_bulk', bulkTxRoute)
-} else if (app_mode === 'Gateway') {
-  app.use('/authen',authRoute)
-  console.log('GATEWAY')
-  
-}
+
 // set port, listen for requests
 const PORT = process.env.PORT || 5020;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    console.log('Process terminated')
+  })
+})

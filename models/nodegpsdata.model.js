@@ -1,5 +1,8 @@
 module.exports = (seq,Seq)=>{
     const NodeGPS = seq.define('nodegpsdata',{
+        gatewayId: {
+            type: Seq.STRING
+        },
         nodeName: {
             type: Seq.STRING
         },
