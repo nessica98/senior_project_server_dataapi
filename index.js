@@ -3,11 +3,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require('dotenv').config()
 const app_mode = process.env.APP_MODE
-
+const logging = require('./configs/logging')
 const app = express();
 
 
-var allowlist = ['http://localhost:4200', 'http://example2.com']
+var allowlist = ['http://localhost:4200', 'http://18.207.139.213']
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
@@ -32,13 +32,17 @@ app.use('/api', ApiRoute)
 const db = require('./models')
 const sequelize = db.sequelize
 sequelize.sync({ force:false }).then((val) => {
-  console.log('DB start run')
+  //console.log('DB start run')
+  logging.info("DB start run")
+}).catch((err)=>{
+  logging.error("database error", err)
 })
 
 // set port, listen for requests
 const PORT = process.env.PORT || 5020;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+  logging.info(`Server is running on port ${PORT}.`);
+  //console.log(`Server is running on port ${PORT}.`);
 });
 
 process.on('SIGTERM', () => {

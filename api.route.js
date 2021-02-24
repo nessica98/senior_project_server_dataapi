@@ -24,17 +24,14 @@ const NodeGPS = db.nodegpsdata
 
 router.use('/gps', gpsRoute)
 router.use('/logbook', LogbookRoute)
-router.use('/node', nodeRoute)
 router.use('/gateway', gatewayRoute)
-router.use('/_bulk', bulkTxRoute)
+router.use('/_bulk',bulkTxRoute)
 // if (app_mode === 'Server') {
 //   console.log('SERVER')
-//   router.use('/node', nodeRoute)
 //   router.use('/gateway', gatewayRoute)
 //   router.use('/_bulk', bulkTxRoute)
 // } else if (app_mode === 'Gateway') {
 //   router.use('/authen',authRoute)
-  
 //   console.log('GATEWAY')
   
 // }
