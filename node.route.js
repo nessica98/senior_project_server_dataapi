@@ -26,9 +26,9 @@ router.post('/add', async (req,res)=>{
         return
     }
     const ownerid = await NodeOwner.findOne({where: {NodeOwnerName:nodeowner},raw:true}, {attribute:['NodeOwnerId']})
-    logging.debug(ownerid.NodeOwnerId)
-    console.log(ownerid.NodeOwnerId)
-    if(ownerid.NodeOwnerId){
+    //logging.debug(ownerid.NodeOwnerId)
+    //console.log(ownerid.NodeOwnerId)
+    if(ownerid && ownerid.NodeOwnerId){
         const newnode = {nodename:nodename,nodestartwork:new Date(node_startdate),nodeackupdate:new Date(),nodeupdate:new Date(),nodeownerNodeOwnerId:ownerid.NodeOwnerId,NodeOwnerId:ownerid}
         NodeData.create(newnode).then((result)=>{
             res.send({status:"add complete",data:result})
