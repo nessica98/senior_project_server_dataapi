@@ -25,7 +25,7 @@ router.post('/gps-post',async (req,res)=>{
     var nodelist_new = new Set()
     payload.forEach((val,idx)=>{
         console.log('add to db', val);
-        nodelist_new.add(val.nodename)
+        nodelist_new.add(val.nodeId)
         var new_GPSrow = nodeGPSdata.build(val)
         new_GPSrow.save().then((result)=>{
             console.log()
@@ -37,11 +37,11 @@ router.post('/gps-post',async (req,res)=>{
         console.log(val)
         nodedata.update({nodeupdate:new Date()},{ 
         where: {
-          nodename:val
+          id:val
         }
       })
     })
-    res.send('add to server DB')
+    res.send({uploadComplete:true, payload_length:payload.length})
 })
 
 router.post('/logbook-post',async (req,res)=>{

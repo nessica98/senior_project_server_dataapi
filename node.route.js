@@ -6,8 +6,9 @@ const { v4: uuidv4 } = require('uuid');
 const logging = require('./configs/logging')
 
 router.post('/adduser', (req,res)=>{
-    const {nodeownername,raw_password} = req.body;
-    const newowner = {NodeOwnerId:uuidv4(),NodeOwnerName:nodeownername}
+    const {NodeOwnerName,raw_password} = req.body;
+    console.log(NodeOwnerName)
+    const newowner = {NodeOwnerId:uuidv4(),NodeOwnerName:NodeOwnerName}
     NodeOwner.create(newowner).then((result)=>{
         res.send({status:"add complete",data:result})
     }).catch((reason)=>{

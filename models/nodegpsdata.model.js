@@ -3,14 +3,17 @@ module.exports = (seq,Seq)=>{
         gatewayId: {
             type: Seq.STRING
         },
-        nodeName: {
-            type: Seq.STRING
+        nodeId: {
+            type: Seq.INTEGER
         },
         nodeGPScoordinate:{
             type: Seq.GEOMETRY('POINT') 
         },
         updateTimestamp:{
             type: Seq.DATE
+        },
+        RSSI:{
+            type: Seq.INTEGER
         }
     },{timestamps: false,createdAt: false})
     NodeGPS.removeAttribute('id')

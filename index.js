@@ -7,7 +7,7 @@ const logging = require('./configs/logging')
 const app = express();
 
 
-var allowlist = ['http://localhost:4200', 'http://18.207.139.213']
+var allowlist = ['http://localhost:4200', 'http://18.207.139.213','http://localhost:4201']
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {

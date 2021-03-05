@@ -11,22 +11,33 @@ const logging = require('./configs/logging')
 router.get('/allnode', (req,res)=>{
     NodeData.findAll({order: sequelize.literal('nodeupdate DESC')}).then((result)=>{
         //console.log(result)
-        logging.info("get nodedata : %d records", result.lengths)
+        logging.info(`get nodedata : ${result.length} records`)
         res.send(result)
 
     }).catch((reason)=>{
         
     })
 })
-router.get('/node/:nodeName',(req,res)=>{
-    const {nodeName} = req.params
-    NodeGPS.findAll({where:{nodeName:nodeName}}).then((result)=>{
-        //console.log(result.length)
-        logging.info(`get nodegps : ${result.length} records`)
-        res.send(result)
+router.get('/node/:nodeId',(req,res)=>{
+    const {nodeId} = req.params
+    NodeData.findByPk(nodeId,{ raw: true }).then((result)=>{
+        logging.debug(result)
+        if(!result){
+            res.status(404).send({status:'node not found'})
+            return
+        }
+        const nodename = result.nodename
+        //console.log(result)
+        NodeGPS.findAll({where:{nodeId:nodeId}, raw:true}).then((result_gps)=>{
+            //console.log(result)
+            logging.info(`get nodegps : ${result_gps.length} records`)
+            res.send({nodeName:nodename, data:result_gps})
+        }).catch((reason)=>{
+            if(reason) logging.error(reason)
+            res.sendStatus(500)
+        })
     }).catch((reason)=>{
-        if(reason) { logging.error("error occurs ::", reason)}
-        res.sendStatus(500)
+
     })
 })
 
